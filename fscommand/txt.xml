@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doctorlist>
+  <week>
+    <zone>
+      <doctor>66</doctor>
+      <doctor>66</doctor>
+      <doctor>6</doctor>
+    </zone>
+    <zone>
+      <doctor>6</doctor>
+      <doctor>6</doctor>
+      <doctor>6</doctor>
+    </zone>
+    <zone>
+      <doctor>6</doctor>
+      <doctor>6</doctor>
+      <doctor>6</doctor>
+    </zone>
+  </week>
+</doctorlist>
