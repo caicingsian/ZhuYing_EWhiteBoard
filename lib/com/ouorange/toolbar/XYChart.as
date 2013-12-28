@@ -1,4 +1,4 @@
-package com.ouorange.toolbar 
+﻿package com.ouorange.toolbar 
 {
 	import flash.display.Sprite;
 	
@@ -23,7 +23,7 @@ package com.ouorange.toolbar
 			sn = total;
 			_asset = new XYChartAsset();
 			addChild( _asset );
-			
+			//aaa
 			InitComponent();
 			CloseSetting();
 		}
