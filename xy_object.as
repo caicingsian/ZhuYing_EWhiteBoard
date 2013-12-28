@@ -22,9 +22,9 @@
 
 			function bg1(event:MouseEvent):void
 			{
-                trace("main.instance.pen_tool_var_bg:"+main.instance.pen_tool_var)
+                trace("main.instance.pen_tool_var_bg:"+ZhuyingToolbar.instance.pen_tool_var)
                 
-				if(main.instance.pen_tool_var==false){
+				if(ZhuyingToolbar.instance.pen_tool_var==false){
 				startDrag();}
 			}
 
@@ -32,7 +32,7 @@
 
 			function bg2(event:MouseEvent):void
 			{
-				if(main.instance.pen_tool_var==false){
+				if(ZhuyingToolbar.instance.pen_tool_var==false){
 				stopDrag();}
 			}
 
@@ -298,7 +298,7 @@
 			function jj_fn(event:MouseEvent):void
 			{
 
-				if(main.instance.pen_tool_var==false){
+				if(ZhuyingToolbar.instance.pen_tool_var==false){
 				
 				frist_x = stage.mouseX;
 				frist_y = stage.mouseY;
@@ -313,7 +313,7 @@
 
 			addEventListener(MouseEvent.MOUSE_UP, jj_fn2);
 			
-			main.instance.stage.addEventListener(MouseEvent.MOUSE_UP, jj_fn2);
+			ZhuyingToolbar.instance.stage.addEventListener(MouseEvent.MOUSE_UP, jj_fn2);
 			
 			//addEventListener(MouseEvent.ROLL_OVER, jj_fn2);
 

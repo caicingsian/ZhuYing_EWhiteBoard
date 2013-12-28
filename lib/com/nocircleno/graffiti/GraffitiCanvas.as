@@ -182,12 +182,15 @@ package com.nocircleno.graffiti {
 			container = new Sprite();
 			
 			_bmp = new BitmapData(_canvasWidth, _canvasHeight, true, 0x00FFFFFF);
+			//2013/12/24 下午 02:34 for debug
+			//_bmp = new BitmapData(_canvasWidth, _canvasHeight, true, 0x99FF0F00);
 			canvas = new Bitmap(_bmp, "auto", false);
 			
 			// add to display list
 			addChild(container);
 			container.addChild(canvas);
 			container.addChild(drawing_layer);
+			container.mouseChildren = container.mouseEnabled = false;
 			
 			// if a overlay DisplayObject was passed, add it.
 			if(overlay != null) {
@@ -1162,12 +1165,14 @@ package com.nocircleno.graffiti {
 							
 						} else {
 						
-							if (_tool.renderType == ToolRenderType.CLICK_DRAG) {
+							if (_tool.renderType == ToolRenderType.CLICK_DRAG) 
+							{
 								_prevPoint = new Point(container.mouseX, container.mouseY);
 							}
-							
-							stage.addEventListener(MouseEvent.MOUSE_MOVE, draw);
-							draw();
+							this.dispatchEvent( new Event( GraffitiObjectEvent.SELECT ) );
+							//2013/12/24 上午 12:25 Joe 暫時拿掉改用外部傳入
+							//stage.addEventListener(MouseEvent.MOUSE_MOVE, draw);
+							//draw();
 							
 							stage.addEventListener(MouseEvent.MOUSE_UP, mouseHandler);
 							
@@ -1249,10 +1254,11 @@ package com.nocircleno.graffiti {
 			
 			Params	: e -- MouseEvent object that can be null.
 		***************************************************************************/
-		private function draw(e:MouseEvent = null):void {
+		public function draw(e:MouseEvent = null):void {
 			
 			var toolRef:BitmapTool = BitmapTool(_tool);
-			var nextPoint:Point = new Point(container.mouseX, container.mouseY);
+			//var nextPoint:Point = new Point(container.mouseX, container.mouseY);
+			var nextPoint:Point = new Point(e.localX, e.localY);
 			
 			if(toolRef.renderType == ToolRenderType.CLICK_DRAG) {
 				// clear vectors from drawing space

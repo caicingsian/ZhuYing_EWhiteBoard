@@ -1,7 +1,7 @@
 package com.ouorange.toolbar.measuretool
 {
 	import com.senocular.display.TransformTool;
-	import com.util.Trigonometric;
+	import com.utils.Trigonometric;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -11,7 +11,8 @@ package com.ouorange.toolbar.measuretool
 	{
 		public function EquilateralSetSquare()
 		{
-			super();	
+			super();
+			init();
 		}
 		
 		private var _assets:DisplayObject;

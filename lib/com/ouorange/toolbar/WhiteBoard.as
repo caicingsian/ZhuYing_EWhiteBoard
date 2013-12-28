@@ -6,9 +6,7 @@
 	import com.nocircleno.graffiti.tools.LineTool;
 	import com.nocircleno.graffiti.tools.LineType;
 	import com.nocircleno.graffiti.tools.ToolMode;
-	
-
-	
+	import flash.geom.Rectangle;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -18,115 +16,98 @@
 	import flash.geom.Point;
 	import flash.ui.Mouse;
 	
+	//白板
 	public class WhiteBoard extends Sprite
 	{
-		private var canvasGroup:Array;
+		private var _canvas:Canvas;
 		
-		public static var instance:WhiteBoard;
-
-		private var _brush:BrushTool;
+		private var _direction:String;
 		
-		private var _eraser:BrushTool;
+		private var _asset:MovieClip;
 		
-		private var _penButton:MovieClip;
+		private var _enable:Boolean;
 		
-		private var _eraserButton:MovieClip;
-
-		private var _canvas:GraffitiCanvas;
-
-		private var _canvas2:GraffitiCanvas;
+		private var _dragRegions:Array;
 		
-		private var _clearButton:MovieClip;
-	
-		private var _pen:Pen;
+		private var _toggleButton:MovieClip;
 		
-		public function WhiteBoard()
+		public function WhiteBoard( asset:MovieClip , direction:String )
 		{
-			super();
-//			return;
-			instance = this;
-			canvasGroup = new Array();
-			appendCanvas( new WhiteBoardCanvas() );
+			_asset = asset;
+			_direction = direction;
 			
-			var mainTimeLine:MovieClip = ToolBox.stageRef.getChildAt(0) as MovieClip;
-			_penButton = mainTimeLine.getChildByName("btn4");
-			_eraserButton = mainTimeLine.getChildByName("btn6");
-			_clearButton = mainTimeLine.getChildByName("btn10");
+			_dragRegions = new Array();
+			_dragRegions[WhiteBoardDirection.TOP] = new Rectangle( 0 , 0 , 0 , 700 );
+			_dragRegions[WhiteBoardDirection.BOTTOM] = new Rectangle( 0 , 0 , 0 , -700 );
+			_dragRegions[WhiteBoardDirection.LEFT] = new Rectangle( 0 , 0 , 1400 , 0 );
+			_dragRegions[WhiteBoardDirection.RIGHT] = new Rectangle( 0 , 0 , -1400 , 0 );
 			
-			_canvas = new GraffitiCanvas(1500, 400, 10);
-			addChild(_canvas);
-			_canvas.canvasEnabled = false;
+			_canvas = new Canvas( _asset.width , _asset.height );
 			
-			var col:Bitmap = new Bitmap( new BitmapData(  500 , 400 , true , 0xFFFFFFFF ) );
+			addChild( _asset );
+			_asset.addChildAt( _canvas , 1 );
 			
-			_canvas2 = new GraffitiCanvas(500, 400, 10 , null , col);
-			_canvas2.setCanvasPos( new Point( 300 , 100 ) );
-			_canvas2.x = 300;
-			_canvas2.y = 100;
-			addChild(_canvas2);
-//			_canvas2.mouseDrag = true;
-//			_canvas2.canvasEnabled = false;
-//			canvas2.addEventListener(MouseEvent.MOUSE_DOWN , onCanvasDown);
+			canvas.name = "white_board_" + _direction;
 			
-			_brush = new BrushTool(8, 0xFF0000, 1, 0, BrushType.DIAMOND);
-			_eraser = new BrushTool(8, 0xFF0000, 1, 0, BrushType.ROUND, ToolMode.ERASE);
-			
-			
-			_penButton.addEventListener( MouseEvent.CLICK , onPenClick );
-			_eraserButton.addEventListener( MouseEvent.CLICK , onEraserClick );
-			_clearButton.addEventListener( MouseEvent.CLICK , onClearClick );
-			
-//			canvas.activeTool = brush;
-//			var dottedLine:LineTool = new LineTool(4, 0xBBBBBB, 1, LineType.DOTTED);
-//			canvas2.activeTool = dottedLine;
-			
-			//_pen = new Pen();
-			//addChild( _pen );
+			SetUpDragHandler();
+			enable = false;
 		}
 		
-		private function onPenClick(e:MouseEvent):void
+		public function ToggleWhiteboard():void 
 		{
-			_canvas.activeTool = _brush;
-			_canvas2.activeTool = _brush;
-			_canvas.canvasEnabled = true;
-			_canvas2.canvasEnabled = true;
-			
+			enable = !enable;
 		}
 		
-		private function onClearClick(e:MouseEvent):void
+		private function SetUpDragHandler():void 
 		{
-			_canvas.clearCanvas();
-			_canvas2.clearCanvas();
-		}
-		
-		private function onEraserClick(e:MouseEvent):void
-		{
-			_canvas.activeTool = _eraser;
-			_canvas2.activeTool = _eraser;
-			
-		}
-		
-		private function onCanvasDown(e:MouseEvent):void
-		{
-			var s:Sprite = e.target as Sprite;
-			//s.startDrag(false);
-		}
-		
-		public function appendCanvas( canvas:Sprite ):void
-		{
-			if( checkCanvasExist( canvas ) == false )
+			if ( _direction == WhiteBoardDirection.CENTER )
 			{
-				canvasGroup.push( canvas );
+				MovieClip(_asset["close_btn"]).buttonMode = true;
+				MovieClip(_asset["close_btn"]).addEventListener(MouseEvent.CLICK, onCloseClick);
+			}
+			else
+			{
+				MovieClip(_asset["drag_btn"]).buttonMode = true;
+				MovieClip(_asset["drag_btn"]).addEventListener(MouseEvent.MOUSE_DOWN, OnDragStart);
 			}
 		}
 		
-		public function checkCanvasExist( canvas:Sprite ):Boolean
+		private function OnDragStop(e:MouseEvent):void 
 		{
-			var idx:int = canvasGroup.indexOf( canvas );
-			if( idx >= 0) 
-				return true;
-			else
-				return false;
+			this.stopDrag();
+			this.stage.removeEventListener( MouseEvent.MOUSE_UP, OnDragStop );
+		}
+		
+		private function OnDragStart(e:MouseEvent):void 
+		{
+			this.startDrag( false , _dragRegions[ _direction ] );
+			this.stage.addEventListener( MouseEvent.MOUSE_UP, OnDragStop );
+		}
+		
+		private function onCloseClick(e:MouseEvent):void 
+		{
+			enable = false;
+		}
+		
+		public function get canvas():Canvas 
+		{
+			return _canvas;
+		}
+		
+		public function set canvas(value:Canvas):void 
+		{
+			_canvas = value;
+		}
+		
+		public function get enable():Boolean 
+		{
+			return _enable;
+		}
+		
+		public function set enable(value:Boolean):void 
+		{
+			_enable = value;
+			this.visible = _enable;
 		}
 	}
 }

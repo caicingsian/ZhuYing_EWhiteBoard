@@ -1,4 +1,5 @@
-﻿
+﻿import com.ouorange.toolbar.BrushPot;
+
 
 var b1x:Number = btn1.x;
 var b2x:Number = btn2.x;
@@ -96,7 +97,7 @@ btn1.addEventListener(MouseEvent.ROLL_OVER, btn1_over);
 
 function btn1_over(event:MouseEvent):void
 {
-
+	trace( "開啟形狀按鈕");
 	if (toolmode==true)
 	{
 
@@ -599,14 +600,11 @@ function btn1_fn_c(event:MouseEvent):void
 pan_m_s2.visible = false;
 pan_m2.visible = false;
 
-
-
-
 btn4.addEventListener(MouseEvent.MOUSE_DOWN, btn4_fn);
 
 function btn4_fn(event:MouseEvent):void
-{
-
+{	//鉛筆開
+	trace( "鉛筆開" );
     tool_reset()
 
 	if (pan_m2.visible == false)
@@ -641,39 +639,30 @@ function btn4_fn(event:MouseEvent):void
 
 		//-----------------
 		action = 0;
-		trace("筆畫");
-		main_tab.mc.visible = true;
-		main_tab2.mc.visible = true;
-		main_tab3.mc.visible = true;
-		main_tab4.mc.visible = true;
-		main_tab5.mc.visible = true;
-		
+	
 		main_tab6.mc.visible = true;
 		main_tab7.mc.visible = true;
 		main_tab8.mc.visible = true;
 
 		
 		
-		_penControl.enable=false
-		;
-		pan_control();
+		//_penControl.enable=false
+		
+		//pan_control();
 
 		my_alpha = 1;
 		
-		pen_tool_open()
+		pen_tool_open( BrushPot.PENCIL );
 		//-------------------
 	}
 
 }
 
-
-
-
-
 pan_m2.center_btn.addEventListener(MouseEvent.MOUSE_DOWN, btn4_fn_c);
 
 function btn4_fn_c(event:MouseEvent):void
-{
+{	//鉛筆關
+	trace( "鉛筆關" );
 	open_obj = false;
 
 	pan_m_s2.gotoAndStop(1);
@@ -695,40 +684,16 @@ function btn4_fn_c(event:MouseEvent):void
 
 
 	//------
-	_penControl.enable = true;
-	pan_control();
+	//_penControl.enable = true;
+	//pan_control();
 	//-----
-	pen_tool_var=false
+	//pen_tool_var=false
 	
-	trace("pen_tool_var:"+pen_tool_var)
+	//trace("pen_tool_var:"+pen_tool_var)
 	//-----
 	pen_tool_close()
-	
-	
-
 }
 
-//--------------------------------------------------筆刷控制
-
-function pan_control()
-{
-
-	trace("_penControl.enable:"+_penControl.enable);
-	trace("_isDrawable:"+_isDrawable);
-
-	//---------------------
-	//顯示(關閉)畫筆、然後開始操作
-	_isDrawable = _penControl.enable = ! _penControl.enable;
-	_ruler.enable = ! _isDrawable;
-	_ruler2.enable = ! _isDrawable;
-	_ruler3.enable = ! _isDrawable;
-	_ruler4.enable = ! _isDrawable;
-
-	//----------------------
-
-}
-
-//--------------------------------------------------
 
 
 //--btn5
@@ -740,8 +705,8 @@ pan_m.visible = false;
 btn5.addEventListener(MouseEvent.MOUSE_DOWN, btn5_fn);
 
 function btn5_fn(event:MouseEvent):void
-{
-
+{	//淫光筆
+	trace("淫光筆開");
     tool_reset()
 
 	if (pan_m.visible == false)
@@ -778,12 +743,6 @@ function btn5_fn(event:MouseEvent):void
 		//---------------------
 
 		action = 0;
-		trace("畫筆");
-		main_tab.mc.visible = true;
-		main_tab2.mc.visible = true;
-		main_tab3.mc.visible = true;
-		main_tab4.mc.visible = true;
-		main_tab5.mc.visible = true;
 		
 		main_tab6.mc.visible = true;
 		main_tab7.mc.visible = true;
@@ -791,22 +750,20 @@ function btn5_fn(event:MouseEvent):void
 
 		_penControl.enable=false
 		;
-		pan_control();
+		//pan_control();
 
 		my_alpha = 0.5;
 		//------------------------
-		pen_tool_open()
+		pen_tool_open( BrushPot.HIGHLIGHTER )
 
 	}
-
-
 }
 
 
 pan_m.center_btn.addEventListener(MouseEvent.MOUSE_DOWN, btn5_fn_c);
 
 function btn5_fn_c(event:MouseEvent):void
-{
+{	trace("淫光筆關");
 	open_obj=false
 	;
 	pan_m_s.gotoAndStop(1);
@@ -828,9 +785,9 @@ function btn5_fn_c(event:MouseEvent):void
 
 	//------
 	_penControl.enable = true;
-	pan_control();
+	//pan_control();
 	//-----
-	pen_tool_var=false
+	//pen_tool_var=false
 	
 	pen_tool_close()
 
@@ -842,41 +799,24 @@ btn6.addEventListener(MouseEvent.MOUSE_DOWN, btn6_fn_c);
 
 function btn6_fn_c(event:MouseEvent):void
 {
+	trace("橡皮開");
 	btn_reset()
 	tool_reset()
 	btn_x_reset()
 	
 	action = 1;
-	trace( "橡皮");
-	main_tab.mc.visible = false;
-	main_tab2.mc.visible = false;
-	main_tab3.mc.visible = false;
-	main_tab4.mc.visible = false;
-	main_tab5.mc.visible = false;
 	
-	//----
 	main_tab6.mc.visible = false;
 	main_tab7.mc.visible = false;
 	main_tab8.mc.visible = false;
 	
-	
-	//----
-	
-	pen_tool_open()
-
-
+	pen_tool_open( BrushPot.ERASER );
 }
-
-
 
 //----------------------------------------
 //--btn10
 broad_m.visible = false;
 broad_o.visible = false;
-
-
-//var btn10_var:Boolean=false
-
 
 broad_o.center_btn.addEventListener(MouseEvent.MOUSE_DOWN, btn10_fn_c);
 
@@ -904,6 +844,7 @@ btn3.addEventListener(MouseEvent.MOUSE_DOWN, btn3_fn_c);
 
 function btn3_fn_c(event:MouseEvent):void
 {
+	trace("開啟測量工具");
     tool_reset()
 	
 	if (broad_m2.visible == false)
@@ -969,38 +910,38 @@ function btn3_fn_c2(event:MouseEvent):void
 
 //------------------------------------呼叫量尺
 
-broad_o2.ruler_btn4.addEventListener(MouseEvent.MOUSE_DOWN, broad_o2_fn1);
-
-function broad_o2_fn1(event:MouseEvent):void
-{
-	addChild( _ruler );
-
-}
-
-broad_o2.ruler_btn3.addEventListener(MouseEvent.MOUSE_DOWN, broad_o2_fn2);
-
-function broad_o2_fn2(event:MouseEvent):void
-{
-	addChild( _ruler4 );
-
-}
-
-
-broad_o2.ruler_btn2.addEventListener(MouseEvent.MOUSE_DOWN, broad_o2_fn3);
-
-function broad_o2_fn3(event:MouseEvent):void
-{
-	addChild( _ruler2 );
-
-}
-
-broad_o2.ruler_btn1.addEventListener(MouseEvent.MOUSE_DOWN, broad_o2_fn4);
-
-function broad_o2_fn4(event:MouseEvent):void
-{
-	addChild( _ruler3 );
-
-}
+//broad_o2.ruler_btn4.addEventListener(MouseEvent.MOUSE_DOWN, broad_o2_fn1);
+//
+//function broad_o2_fn1(event:MouseEvent):void
+//{
+	//addChild( _ruler );
+//
+//}
+//
+//broad_o2.ruler_btn3.addEventListener(MouseEvent.MOUSE_DOWN, broad_o2_fn2);
+//
+//function broad_o2_fn2(event:MouseEvent):void
+//{
+	//addChild( _ruler4 );
+//
+//}
+//
+//
+//broad_o2.ruler_btn2.addEventListener(MouseEvent.MOUSE_DOWN, broad_o2_fn3);
+//
+//function broad_o2_fn3(event:MouseEvent):void
+//{
+	//addChild( _ruler2 );
+//
+//}
+//
+//broad_o2.ruler_btn1.addEventListener(MouseEvent.MOUSE_DOWN, broad_o2_fn4);
+//
+//function broad_o2_fn4(event:MouseEvent):void
+//{
+	//addChild( _ruler3 );
+//
+//}
 
 
 //-------------------------------------呼叫座標圖
@@ -1011,7 +952,7 @@ btn2.addEventListener(MouseEvent.MOUSE_DOWN, btn2_fn_a);
 
 function btn2_fn_a(event:MouseEvent):void
 {
-	//tool_reset()
+	trace("呼叫座標圖");
 	
 	trace("xy_nn:"+xy_nn)
 	
@@ -1135,43 +1076,7 @@ btn11.x = b11x;*/
 
 
 			//--
-			btn11.addEventListener(MouseEvent.MOUSE_DOWN, btn11_fn);
-
-                function btn11_fn(event:MouseEvent):void
-                {
-	              trace("btn11")
-	
-               // content.dispose()
-				//content.width=1500
-				//content.height=844
-				//content.transparent=true
-				//content.fillRect(new Rectangle(0,0,1500,844),0x00FFFFFF)
-				//content.
-				  //content=null
-              //show.dispose()
-				// content.clone()
-                 //trace(" content:"+ content)   
-				
-				//mc.graphics.drawRect(0,0,1500,844)
-				 //mc.visible = false
-				//content.draw(mc,new Matrix(),new ColorTransform(),BlendMode.ERASE)
-				//e.updateAfterEvent();
-				
-				
-				
-				
-				
-				//var content:BitmapData = new BitmapData(1500,844,true,0x00FFFFFF);
-			
-			
-			
-			//把content显示出来
-			//var show:Bitmap = new Bitmap(content);
-			//main.addChildAt(show,0);
-				
-				}
-
-
+btn11.addEventListener(MouseEvent.MOUSE_DOWN, OnTrashCanClick);
 
 //------------------------------
 function tool_reset(){
@@ -1195,52 +1100,7 @@ function tool_reset(){
 
 
 
-function pen_tool_close(){
-	        
-			trace("pen_tool_close()")
-	        /*
-			mc_move.removeEventListener(MouseEvent.MOUSE_DOWN,startDraw);
 
-			broad_t_obj.mc.removeEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			broad_l_obj.mc.removeEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			broad_r_obj.mc.removeEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			broad_b_obj.mc.removeEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			
-			
-			
-			//
-			_xyMC1.removeEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			_xyMC2.removeEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			_xyMC3.removeEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			//--
-	        */
-			startDraw_c=false
-
-	}
-	
-function pen_tool_open(){
-	
-	        trace("pen_tool_open()")
-	
-	        /*
-			mc_move.addEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-
-			broad_t_obj.mc.addEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			broad_l_obj.mc.addEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			broad_r_obj.mc.addEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			broad_b_obj.mc.addEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			
-			//-
-			_xyMC1.addEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			_xyMC2.addEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			_xyMC3.addEventListener(MouseEvent.MOUSE_DOWN,startDraw);
-			//--
-	        */
-			startDraw_c=true
-			
-	       pen_tool_var=true
-		   trace("pen_tool_var:"+pen_tool_var)
-	}
 	
 //-------------------------	
 

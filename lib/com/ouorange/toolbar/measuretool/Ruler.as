@@ -1,7 +1,7 @@
 package com.ouorange.toolbar.measuretool
 {
 	import com.senocular.display.TransformTool;
-	import com.util.Trigonometric;
+	import com.utils.Trigonometric;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -11,7 +11,7 @@ package com.ouorange.toolbar.measuretool
 	{
 		public function Ruler()
 		{
-			
+			init();
 		}
 		
 		private var _assets:DisplayObject;
@@ -23,6 +23,7 @@ package com.ouorange.toolbar.measuretool
 		override public function init():void
 		{
 			_asset = new RulerAsset();
+			//主要用來計算畫線的參考點.
 			_pointStart = _asset['p1'];
 			_pointEnd = _asset['p2'];
 			addChild( _asset );

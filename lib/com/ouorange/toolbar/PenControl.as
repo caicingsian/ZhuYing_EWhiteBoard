@@ -1,14 +1,24 @@
 package com.ouorange.toolbar
 {
+	import com.nocircleno.graffiti.tools.BrushTool;
 	import com.ouorange.toolbar.measuretool.CommonMeasureTool;
+	import flash.display.Sprite;
+	import flash.events.Event;
 	
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-
-	public class PenControl
+	
+	public class PenControl extends Sprite
 	{
+		public static const BRUSH_UPDATE:String = "BRUSH_UPDATE";
+		
+		public var measureTools:Vector.<CommonMeasureTool>;
+		
 		private var _currentPen:Pen;
+		
+		//筆桶
+		private var _brushPot:BrushPot;
 		
 		private var _enable:Boolean;
 		
@@ -18,23 +28,13 @@ package com.ouorange.toolbar
 		
 		private var _bufferPoint:Point;
 		
-		private var _measureTools:Vector.<CommonMeasureTool>;
-		
 		public function PenControl( stage:Stage )
 		{
 			_stageRef = stage;
+			_brushPot = new BrushPot();
 			_bufferPoint = new Point();
-			_measureTools = new Vector.<CommonMeasureTool>();
-		}
-		
-		public function appendMeasureTool( tool:CommonMeasureTool ):void
-		{
-			_measureTools.push( tool );
-		}
-		
-		public function removeMeasureTool( tool:CommonMeasureTool ):void
-		{
-			
+			setCurrentPen( _brushPot.GetPen( BrushPot.HIGHLIGHTER ) );
+			measureTools = new Vector.<CommonMeasureTool>();
 		}
 		
 		public function get enable():Boolean
@@ -45,13 +45,46 @@ package com.ouorange.toolbar
 		public function set enable(value:Boolean):void
 		{
 			_enable = value;
+			_currentPen.enable = _enable;
+			
 			if( _enable ) setTouchEventListener();
 			else stopTouchEventListener();
 		}
-
-		public function setCurrentPen(pen:Pen):void
+		
+		public function get currentPen():Pen 
 		{
-			_currentPen = pen;
+			return _currentPen;
+		}
+		
+		public function GetPen( name:String ):Pen
+		{
+			return _brushPot.GetPen(name );
+		}
+		
+		//設定使用的筆刷
+		public function setCurrentPen( pen:Pen ):void
+		{
+			//trace( "setCurrentPen:" + pen.name );
+			if ( pen )
+			{
+				if ( _currentPen != null )
+				{
+					removeChild( _currentPen );
+				}
+				_currentPen = pen;
+				addChild( _currentPen );
+				_currentPen.addEventListener(Pen.BRUSH_STYLE_UPDATE, OnPenStyleUpdate);
+				this.dispatchEvent( new Event( BRUSH_UPDATE ) );
+			}
+		}
+		
+		private function OnPenStyleUpdate(e:Event):void 
+		{
+			//trace( "OnPenStyleUpdate" );
+			if ( _currentPen == e.target )
+			{
+				this.dispatchEvent( new Event( BRUSH_UPDATE ) );
+			}
 		}
 		
 		private function stopTouchEventListener():void
@@ -68,22 +101,26 @@ package com.ouorange.toolbar
 			_stageRef.addEventListener( MouseEvent.MOUSE_MOVE , onTouchEventHandler );
 		}
 		
+		//更新筆頭的位置
 		private function updatePenPoint( pos:Point ):void
 		{
-			_bufferPoint = vaildPenPoint( pos );
-			//darw on the canvas by point.
-			if( _currentPen )
+			if( _currentPen  )
 			{
+				if ( _currentPen.name != BrushPot.ERASER )
+				{
+					_bufferPoint = vaildPenPoint( pos );	
+				}
 				_currentPen.setDrawPoint( _bufferPoint );	
 			}
 		}
 		
+		//根據某些工具修正目前筆頭位置.
 		private function vaildPenPoint( pos:Point ):Point
 		{
-			var len:int = _measureTools.length;
+			var len:int = measureTools.length;
 			for (var i:int = 0; i < len; i++) 
 			{
-				pos = _measureTools[i].adjustDrawPostion(pos);	
+				pos = measureTools[i].adjustDrawPostion(pos);	
 			}
 			return pos;
 		}

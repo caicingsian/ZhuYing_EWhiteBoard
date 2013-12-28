@@ -1,6 +1,7 @@
 ﻿package com.ouorange.toolbar.measuretool
 {
 	import com.senocular.display.TransformTool;
+	import flash.display.MovieClip;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -10,14 +11,16 @@
 	
 	public class CommonMeasureTool extends Sprite
 	{
+		public static const TOOL_SELECTED:String = "TOOL_SELECTED";
+		
+		public static const TOOL_UNSELECT:String = "TOOL_UNSELECT";
+		
 		public function CommonMeasureTool()
 		{
-			init();
+			
 		}
 		
 		protected var _asset:DisplayObject;
-		
-		
 		
 		protected var transformTool:TransformTool;
 		
@@ -39,19 +42,22 @@
 		public function init():void
 		{
 			_drawHelper = new MeasureToolDrawHelper();
-			
 			initTransformTool();
-			
-			if( _asset ) _asset.addEventListener( MouseEvent.CLICK, onMeasureToolClick );
+			if ( _asset )
+			{
+				_asset.addEventListener( MouseEvent.CLICK, onMeasureToolClick );
+			}
 		}
 		
 		public function setToolUnselect():void
 		{	
+			this.dispatchEvent( new Event( TOOL_UNSELECT ) );
 			transformTool.target = null;
 		}
 		
 		public function setToolSelected():void
 		{
+			this.dispatchEvent( new Event( TOOL_SELECTED ) );
 			transformTool.target = _asset;
 		}
 		
@@ -70,6 +76,7 @@
 		
 		private function onMeasureToolClick(e:Event):void
 		{
+			trace( "onMeasureToolClick" );
 			if( e.type == TransformTool.CONTROL_UNFOCUS )
 			{
 				setToolUnselect();
