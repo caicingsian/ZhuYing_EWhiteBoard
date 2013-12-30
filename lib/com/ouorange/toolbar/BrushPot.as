@@ -44,7 +44,7 @@ package com.ouorange.toolbar
 			pen = new Pen();
 			pen.name = ERASER;
 			pen.brushTool = new BrushTool();
-			penProp = new PenProp(30,0x000000,1,0,BrushType.DIAMOND,ToolMode.ERASE);
+			penProp = new PenProp(30,0x000000,1,0,BrushType.ROUND,ToolMode.ERASE);
 			pen.UpdateBrushStyle(penProp);
 			_brushPot[ERASER] = pen;
 			

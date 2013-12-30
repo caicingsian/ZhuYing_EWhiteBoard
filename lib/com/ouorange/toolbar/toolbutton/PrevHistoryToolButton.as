@@ -9,14 +9,12 @@ package com.ouorange.toolbar.toolbutton
 	 */
 	public class PrevHistoryToolButton extends ToolButton 
 	{
-		
 		public function PrevHistoryToolButton(asset:MovieClip) 
 		{
+			this.isSingleClick = true;
 			this.name = ToolBarButtonControl.TOOL_PREV_HISTORY;
-			super(asset);
-			
+			super(asset);		
 		}
-		
 	}
 
 }

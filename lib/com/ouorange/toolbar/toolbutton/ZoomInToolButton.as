@@ -8,13 +8,10 @@ package com.ouorange.toolbar.toolbutton
 	 */
 	public class ZoomInToolButton extends ToolButton
 	{
-		
 		public function ZoomInToolButton(asset:MovieClip) 
 		{
 			this.name = ToolBarButtonControl.TOOL_ZOOM_IN
 			super(asset);
-		}
-		
+		}	
 	}
-
 }

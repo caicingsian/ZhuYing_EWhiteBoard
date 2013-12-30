@@ -2,6 +2,7 @@ package com.ouorange.toolbar.toolbutton
 {
 	import com.ouorange.toolbar.GlobalConst;
 	import com.ouorange.toolbar.measuretool.MeasureToolManager;
+	import com.ouorange.toolbar.SelectedTool;
 	import com.ouorange.toolbar.ShapeTool;
 	import com.ouorange.toolbar.ToolBarButtonControl;
 	import flash.display.MovieClip;
@@ -17,7 +18,7 @@ package com.ouorange.toolbar.toolbutton
 	{
 		private var _colorPicker:ToolColorPicker;
 		
-		private var _selectedShape:String;
+		private var _selectedShape:String = ShapeTool.HEARD;
 		
 		private var _color:uint;
 		
@@ -29,20 +30,18 @@ package com.ouorange.toolbar.toolbutton
 		
 		private var _shapeColorTransform:ColorTransform;
 		
-		private var _interactiveSensor:Sprite;
-		
 		private var _measureToolMgr:MeasureToolManager;
+		
+		private var _selectedTool:SelectedTool;
 		
 		public function DrawShapeToolButton(asset:MovieClip) 
 		{
 			super(asset);
 			this.name = ToolBarButtonControl.TOOL_DRAW_SHAPE;
 
-			var content:MovieClip;
+			_selectedTool = new SelectedTool( SelectedTool.TYPE_SHAPE , _selectedShape , {} );
 			
 			_measureToolMgr = MeasureToolManager.Instatnce;
-			
-			_interactiveSensor = GlobalConst.APP_INTERACTIVE_SENSOR;
 			
 			_content = _asset["panel"]["panel"];
 			
@@ -82,59 +81,63 @@ package com.ouorange.toolbar.toolbutton
 				}
 			}
 		}
-		
+		//切換圖形
 		private function OnShapeBtnClick(e:MouseEvent):void 
 		{
-			trace("OnShapeBtnClick:"+_btnShapeNameMapping[e.target.name]);
+			//trace("OnShapeBtnClick:"+_btnShapeNameMapping[e.target.name]);
 			if ( _btnShapeNameMapping[e.target.name] )
 			{
 				_selectedShape = _btnShapeNameMapping[e.target.name];
+				RefreshSelectedProp();
 			}
 		}
 		
 		override public function ActiveTool():void 
 		{
 			super.ActiveTool();
-			_interactiveSensor.addEventListener( MouseEvent.CLICK , OnScreenClick );
 		}
 		
 		override public function DisActiveTool():void 
 		{
 			super.DisActiveTool();
-			_selectedShape = null;
-			_interactiveSensor.removeEventListener( MouseEvent.CLICK , OnScreenClick );
+			_measureToolMgr.SetSelectTool(null);
 		}
 		
-		private function OnScreenClick(e:MouseEvent):void 
+		private function RefreshSelectedProp():void
 		{
-			trace( "OnScreenClick:" + _selectedShape );
-			if( _selectedShape && _measureToolMgr )
+			_selectedTool.name = _selectedShape;
+			_selectedTool.props.color = _color;
+			_selectedTool.props.shapetype = _shapeType;
+			if ( _isActive )
 			{
-				_measureToolMgr.AddShapeToolByName(_selectedShape, _color, _shapeType);
+				_measureToolMgr.SetSelectTool(_selectedTool);
 			}
 		}
 		
+		//實心&空心切換
 		private function OnShapeTypeChange(e:MouseEvent):void 
 		{
-			//trace( "OnShapeTypeChange:" + e.target.name );
 			if ( e.target.name == "pancil" ) {
 				_shapeType = ShapeTool.TYPE_SOLID;
 			} else {
 				_shapeType = ShapeTool.TYPE_EMPTY;
 			}
+			RefreshSelectedProp();
 		}
 		
+		//顏色切換
 		private function OnColorChange(e:Event):void 
 		{
 			_color = _colorPicker.curtColor;
 			UpdateColor();
 		}
 		
-		//更新研色
+		//更新顏色
 		private function UpdateColor():void
 		{
 			var btn:MovieClip;
 			_shapeColorTransform.color = _color;
+			RefreshSelectedProp();
 			for ( var k:String in _btnShapeNameMapping )
 			{
 				btn = _content[k];

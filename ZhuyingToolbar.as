@@ -1,5 +1,6 @@
 ﻿package 
 {
+	import com.junkbyte.console.Cc;
 	import com.ouorange.toolbar.BrushInspector;
 	import com.ouorange.toolbar.BrushPot;
 	import com.ouorange.toolbar.CanvasManager;
@@ -11,6 +12,8 @@
 	import com.ouorange.toolbar.PenControl;
 	import com.ouorange.toolbar.ToolBarButtonControl;
 	import com.ouorange.toolbar.toolbutton.ToolButton;
+	import com.ouorange.toolbar.TouchSensor;
+	import com.ouorange.toolbar.TouchSensorManager;
 	import com.ouorange.toolbar.WhiteBoard;
 	import com.ouorange.toolbar.WhiteBoardDirection;
 	import com.ouorange.toolbar.WhiteBoardManaer;
@@ -44,7 +47,7 @@
 		private var toolBarControl:ToolBarButtonControl;
 		
 		//工具列中間互動感應區塊
-		private var interactiveSensor:Sprite;
+		private var touchSensor:TouchSensor;
 		
 		public function ZhuyingToolbar()
 		{
@@ -56,19 +59,19 @@
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE, OnAddToStage);
 			GlobalConst.APP_STAGE = this.stage;
+			
+			
+			
+			
 			Init();
 		}
 		
 		private function Init():void
 		{
-			//設定電子白板互動區塊、用來判斷是否點到工具以外的區域
-			//但是因為有周圍白板的關係、會被擋到、就失效了.
-			interactiveSensor = new Sprite();
-			interactiveSensor.graphics.beginFill( 0x000000 , 0 );
-			interactiveSensor.graphics.drawRect( 0 , 0 , 1500 , 750 );
-			interactiveSensor.graphics.endFill();
+			Cc.startOnStage(this, "");			
 			
-			GlobalConst.APP_INTERACTIVE_SENSOR = interactiveSensor;
+			touchSensor = new TouchSensor( 1500 , 750 );
+			TouchSensorManager.Instance.AppendSensor( touchSensor );
 			
 			//測量&圖形工具管理
 			measureManager = new MeasureToolManager();
@@ -98,8 +101,7 @@
 			toolBarControl.addEventListener( ToolButton.TOOL_ACTIVED , OnToolEventHandler , false , 0 , true);
 			toolBarControl.addEventListener( ToolButton.TOOL_DISACTIVE , OnToolEventHandler , false , 0 , true);
 			
-			//測量工作平常是在白板下面、但是如果拖到白板上面、就會移到白板裏面
-			addChild( interactiveSensor );
+			addChild( touchSensor );
 			addChild( measureManager );
 			addChild( chartManager );//圖表應該也是點了哪裏就加在哪裏
 			addChild( canvasManager );

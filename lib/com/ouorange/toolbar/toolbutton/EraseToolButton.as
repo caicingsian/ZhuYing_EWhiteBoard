@@ -17,6 +17,8 @@ package com.ouorange.toolbar.toolbutton
 		
 		private var _pen:Pen;
 		
+		private var _sizeMutilply:Number = 15;
+		
 		public function EraseToolButton(asset:MovieClip) 
 		{
 			super( asset );
@@ -35,7 +37,7 @@ package com.ouorange.toolbar.toolbutton
 		private function UpdateBrushProp():void
 		{
 			var prop:PenProp = _pen.penProp;
-			prop.size = _burshSize.curtSize;
+			prop.size = _burshSize.curtSize * _sizeMutilply;
 			_pen.UpdateBrushStyle( prop );
 		}
 		

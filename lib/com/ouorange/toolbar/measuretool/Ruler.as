@@ -7,7 +7,7 @@ package com.ouorange.toolbar.measuretool
 	import flash.display.Sprite;
 	import flash.geom.Point;
 
-	public class Ruler extends CommonMeasureTool
+	public class Ruler extends MeasureTool
 	{
 		public function Ruler()
 		{

@@ -19,6 +19,8 @@ package com.ouorange.toolbar.toolbutton
 		
 		private var _pen:Pen;
 		
+		private var _sizeMutilply:Number = 5;
+		
 		public function HighLightToolButton( asset:MovieClip ) 
 		{
 			_asset = asset;
@@ -53,7 +55,7 @@ package com.ouorange.toolbar.toolbutton
 		{
 			var prop:PenProp = _pen.penProp;
 			prop.color = _colorPicker.curtColor;
-			prop.size = _burshSize.curtSize;
+			prop.size = _burshSize.curtSize * _sizeMutilply;
 			_pen.UpdateBrushStyle( prop );
 		}
 	}

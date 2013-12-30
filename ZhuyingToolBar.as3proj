@@ -54,6 +54,7 @@
   <!-- SWC Libraries -->
   <libraryPaths>
     <element path="lib\greensock.swc" />
+    <element path="lib\Console2.6+asdoc.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

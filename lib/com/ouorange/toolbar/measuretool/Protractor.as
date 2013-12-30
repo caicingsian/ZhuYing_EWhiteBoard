@@ -7,7 +7,7 @@ package com.ouorange.toolbar.measuretool
 	import flash.geom.Point;
 	
 
-	public class Protractor extends CommonMeasureTool
+	public class Protractor extends MeasureTool
 	{
 		public function Protractor()
 		{

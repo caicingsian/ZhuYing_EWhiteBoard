@@ -5,7 +5,8 @@
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
 	import flash.geom.ColorTransform;
-
+	
+	//圖形公具
 	public class ShapeTool extends CommonMeasureTool
 	{
 		//圖形定義

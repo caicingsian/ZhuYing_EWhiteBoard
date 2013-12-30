@@ -31,6 +31,11 @@
 		
 		private var _toggleButton:MovieClip;
 		
+		private var _sensor:TouchSensor;
+		
+		//放測量工具的容器.
+		private var _materialContainer:Sprite;
+		
 		public function WhiteBoard( asset:MovieClip , direction:String )
 		{
 			_asset = asset;
@@ -42,10 +47,17 @@
 			_dragRegions[WhiteBoardDirection.LEFT] = new Rectangle( 0 , 0 , 1400 , 0 );
 			_dragRegions[WhiteBoardDirection.RIGHT] = new Rectangle( 0 , 0 , -1400 , 0 );
 			
+			_materialContainer = new Sprite();
+			_sensor = new TouchSensor( _asset.width, _asset.height, _materialContainer);			
 			_canvas = new Canvas( _asset.width , _asset.height );
 			
+			TouchSensorManager.Instance.AppendSensor( _sensor );
+			
 			addChild( _asset );
+			
 			_asset.addChildAt( _canvas , 1 );
+			_asset.addChildAt( _materialContainer , 1);
+			_asset.addChildAt( _sensor , 1 );
 			
 			canvas.name = "white_board_" + _direction;
 			

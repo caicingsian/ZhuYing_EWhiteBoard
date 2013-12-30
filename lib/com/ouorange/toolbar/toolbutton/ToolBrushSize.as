@@ -116,7 +116,7 @@ package com.ouorange.toolbar.toolbutton
 		
 		public function get curtSize():Number 
 		{
-			return _curtSize * 2.5;
+			return _curtSize;
 		}
 	}
 }

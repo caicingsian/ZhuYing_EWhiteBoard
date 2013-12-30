@@ -11,6 +11,7 @@ package com.ouorange.toolbar.toolbutton
 	{
 		public function NextHistoryToolButton(asset:MovieClip) 
 		{
+			this.isSingleClick = true;
 			this.name = ToolBarButtonControl.TOOL_NEXT_HISTORY;
 			super(asset);
 		}

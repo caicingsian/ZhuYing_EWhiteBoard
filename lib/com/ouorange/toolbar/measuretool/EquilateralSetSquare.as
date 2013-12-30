@@ -7,7 +7,7 @@ package com.ouorange.toolbar.measuretool
 	import flash.display.Sprite;
 	import flash.geom.Point;
 
-	public class EquilateralSetSquare extends CommonMeasureTool
+	public class EquilateralSetSquare extends MeasureTool
 	{
 		public function EquilateralSetSquare()
 		{

@@ -1,7 +1,9 @@
 package com.ouorange.toolbar.toolbutton 
 {
 	import com.ouorange.toolbar.GlobalConst;
+	import com.ouorange.toolbar.measuretool.MeasureTool;
 	import com.ouorange.toolbar.measuretool.MeasureToolManager;
+	import com.ouorange.toolbar.SelectedTool;
 	import com.ouorange.toolbar.ToolBarButtonControl;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -17,18 +19,24 @@ package com.ouorange.toolbar.toolbutton
 	{
 		private var measureToolMgr:MeasureToolManager;
 		
-		private var _selectedTool:String;
+		private var _selectedTool:SelectedTool;
 		
-		private var _interactiveSensor:Sprite;
+		private var _toolNameMapping:Array;
 		
 		public function MeasureToolButton(asset:MovieClip) 
 		{
 			super(asset);
-			_interactiveSensor = GlobalConst.APP_INTERACTIVE_SENSOR;
-			
-			_asset = asset;
-			measureToolMgr = MeasureToolManager.Instatnce;
 			this.name = ToolBarButtonControl.TOOL_MEASURE
+			measureToolMgr = MeasureToolManager.Instatnce;
+			
+			_selectedTool = new SelectedTool( SelectedTool.TYPE_MEASURE );
+			
+			_toolNameMapping = new Array();
+			_toolNameMapping["ruler_btn1"] = MeasureTool.MEASURE_RIGHTANGLESETSQUARE;
+			_toolNameMapping["ruler_btn2"] = MeasureTool.MEASURE_EQUILATERALSETSQUARE;
+			_toolNameMapping["ruler_btn3"] = MeasureTool.MEASURE_RULER;
+			_toolNameMapping["ruler_btn4"] = MeasureTool.MEASURE_PROTRACTOR;
+			
 			InitToolButtonEvent();
 		}	
 		
@@ -50,29 +58,22 @@ package com.ouorange.toolbar.toolbutton
 		override public function ActiveTool():void 
 		{
 			super.ActiveTool();
-			_interactiveSensor.addEventListener( MouseEvent.CLICK , OnScreenClick );
 		}
 		
 		override public function DisActiveTool():void 
 		{
 			super.DisActiveTool();
-			_selectedTool = null;
-			_interactiveSensor.removeEventListener( MouseEvent.CLICK , OnScreenClick );
-		}
-		
-		private function OnScreenClick(e:MouseEvent):void 
-		{
-			trace( "OnScreenClick" );
-			if( _selectedTool && measureToolMgr )
-			{
-				measureToolMgr.AddMeasureToolByName( _selectedTool );
-			}
+			measureToolMgr.SetSelectTool( null );
 		}
 		
 		//新增工具按鈕按下
 		private function OnAddToolClick( e:MouseEvent ):void
 		{
-			_selectedTool = e.target.name;
+			if ( _toolNameMapping[e.target.name] ) 
+			{
+				_selectedTool.name = _toolNameMapping[e.target.name];
+				measureToolMgr.SetSelectTool( _selectedTool );	
+			}
 		}
 	}
 }

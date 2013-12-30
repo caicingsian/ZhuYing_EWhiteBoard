@@ -9,6 +9,7 @@ package com.ouorange.toolbar.toolbutton
 	/**
 	 * ...
 	 * @author Joe&Allen
+	 * 工具列顏色挑選
 	 */
 	public class ToolColorPicker extends EventDispatcher
 	{

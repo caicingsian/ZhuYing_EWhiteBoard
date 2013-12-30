@@ -96,7 +96,7 @@
 		{
 			_drawPointTexture.graphics.clear();
 			_drawPointTexture.graphics.lineStyle( 1 , _penProp.color );
-			_drawPointTexture.graphics.drawCircle( 0, 0 , _penProp.size );
+			_drawPointTexture.graphics.drawCircle( 0, 0 , _penProp.size * 0.5);
 			_drawPointTexture.graphics.endFill();
 		}
 		

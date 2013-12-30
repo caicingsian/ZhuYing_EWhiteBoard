@@ -7,7 +7,7 @@ package com.ouorange.toolbar.measuretool
 	import flash.display.Sprite;
 	import flash.geom.Point;
 
-	public class RightAngleSetSquare extends CommonMeasureTool
+	public class RightAngleSetSquare extends MeasureTool
 	{		
 		public function RightAngleSetSquare()
 		{

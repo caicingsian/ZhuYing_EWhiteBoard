@@ -42,6 +42,8 @@ package com.ouorange.toolbar.toolbutton
 				_toggleBtn = _asset["__Btn"];
 				_toggleBtn.addEventListener( MouseEvent.MOUSE_OVER , OnMouseHandler );
 				_toggleBtn.addEventListener( MouseEvent.MOUSE_OUT , OnMouseHandler );
+				_toggleBtn.addEventListener( MouseEvent.MOUSE_UP , OnMouseHandler );
+				_toggleBtn.addEventListener( MouseEvent.MOUSE_DOWN , OnMouseHandler );
 				_toggleBtn.addEventListener( MouseEvent.CLICK , OnMouseHandler );
 				_toggleBtn.buttonMode = true;
 			}
@@ -51,8 +53,14 @@ package com.ouorange.toolbar.toolbutton
 		
 		private function OnMouseHandler(e:MouseEvent):void 
 		{
+			//trace("123");
 			_asset.gotoAndStop(1);
-			//trace( e.type , _isActive );
+			if ( e.type == MouseEvent.MOUSE_DOWN ) {
+				_asset.scaleX = _asset.scaleY = 0.9;
+			} else if ( e.type == MouseEvent.MOUSE_UP ) {
+				_asset.scaleX = _asset.scaleY = 1;
+			}
+			
 			if ( e.type == MouseEvent.MOUSE_OVER && _isActive == false )
 			{
 				_asset.gotoAndPlay(2);
@@ -61,6 +69,7 @@ package com.ouorange.toolbar.toolbutton
 			else if ( e.type == MouseEvent.MOUSE_OUT && _isActive == false)
 			{
 				_asset.gotoAndPlay(7);
+				_asset.scaleX = _asset.scaleY = 1;
 			}
 			else if ( e.type == MouseEvent.CLICK )
 			{

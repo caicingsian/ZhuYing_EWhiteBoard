@@ -1,13 +1,17 @@
 package com.ouorange.toolbar.measuretool 
 {
 	import com.ouorange.toolbar.CommonMeasureTool;
+	import com.ouorange.toolbar.events.TouchSensorEvent;
 	import com.ouorange.toolbar.GlobalConst;
+	import com.ouorange.toolbar.SelectedTool;
 	import com.ouorange.toolbar.ShapeTool;
+	import com.ouorange.toolbar.TouchSensorManager;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
+	import flash.geom.Point;
 	import flash.utils.getDefinitionByName;
 	
 	/**
@@ -20,8 +24,6 @@ package com.ouorange.toolbar.measuretool
 		
 		public var allowMultiSelect:Boolean = false;
 		
-		//private var assets:MovieClip;
-		
 		private var toolCls:Array;
 		
 		private var enable:Boolean;
@@ -30,7 +32,10 @@ package com.ouorange.toolbar.measuretool
 		
 		private var measureToolLayer:Sprite;
 		
-		private var interactiveSensor:Sprite;
+		private var selectedTool:SelectedTool;
+		
+		//互動的面板.
+		private var interactiveTarget:Sprite;
 		
 		public static function get Instatnce():MeasureToolManager 
 		{
@@ -40,14 +45,14 @@ package com.ouorange.toolbar.measuretool
 		public function MeasureToolManager() 
 		{
 			instance = this;
-			//這個方法在處理左右白板的時候會失效.
-			interactiveSensor = GlobalConst.APP_INTERACTIVE_SENSOR;
+			
+			TouchSensorManager.Instance.addEventListener( TouchSensorEvent.TOUCH_BEGIN , OnTouchHandler );
 			
 			toolCls = new Array();
-			toolCls["ruler_btn1"] = RightAngleSetSquare;
-			toolCls["ruler_btn2"] = EquilateralSetSquare;
-			toolCls["ruler_btn3"] = Ruler;
-			toolCls["ruler_btn4"] = Protractor;
+			toolCls[MeasureTool.MEASURE_RIGHTANGLESETSQUARE] = RightAngleSetSquare;
+			toolCls[MeasureTool.MEASURE_EQUILATERALSETSQUARE] = EquilateralSetSquare;
+			toolCls[MeasureTool.MEASURE_RULER] = Ruler;
+			toolCls[MeasureTool.MEASURE_PROTRACTOR] = Protractor;
 			
 			toolCls[ShapeTool.CIRCLE] = getDefinitionByName("circle_mc");
 			toolCls[ShapeTool.HEARD] = getDefinitionByName("love_mc");
@@ -61,22 +66,40 @@ package com.ouorange.toolbar.measuretool
 			measureToolLayer = new Sprite();
 			addChild( measureToolLayer );
 			
-			super();
+			//每個白板都有自已放東西的Layer、我們要能夠區分到底要放哪裏
+		}
+		
+		private function OnTouchHandler(e:TouchSensorEvent):void 
+		{
+			interactiveTarget = e.sensor;
+			UnseletAllTool();
+			//trace( "OnTouchHandler:" , interactiveTarget );	
+			if ( selectedTool )
+			{
+				switch (selectedTool.type) 
+				{
+					case SelectedTool.TYPE_MEASURE:
+						AddMeasureToolByName();
+					break;
+					case SelectedTool.TYPE_SHAPE:
+						AddShapeToolByName();
+					break;
+					default:
+				}
+			}
 		}
 		
 		public function SetEnable( enable:Boolean ):void
 		{
-			//trace( "enable:" , enable );
 			this.enable = enable;
 			this.mouseChildren = this.enable;
 			if ( this.enable == false )
 			{
-				UnseletAllTool();
-				interactiveSensor.removeEventListener( MouseEvent.CLICK , OnSensorClick );
+				UnseletAllTool();		
 			}
 			else
 			{
-				interactiveSensor.addEventListener( MouseEvent.CLICK , OnSensorClick );
+				
 			}
 		}
 		
@@ -97,10 +120,11 @@ package com.ouorange.toolbar.measuretool
 				tool.setToolUnselect();
 			}
 		}
+		
 		//新增一個測量工具
-		public function AddMeasureToolByName(toolName:String):void 
+		public function AddMeasureToolByName():void 
 		{
-			//trace( "AddMeasureToolByName:" + toolName );
+			var toolName:String = selectedTool.name;
 			var cls:Class = toolCls[toolName];
 			if ( cls )
 			{
@@ -109,18 +133,23 @@ package com.ouorange.toolbar.measuretool
 		}
 		
 		//新增一個圖形工具
-		public function AddShapeToolByName(toolName:String,color:uint,type:String):void
+		public function AddShapeToolByName():void
 		{
+			var st:ShapeTool;
+			var ct:ColorTransform;
+			var s:MovieClip;
+			var toolName:String = selectedTool.name;
 			var cls:Class = toolCls[toolName];
+			var type:String = selectedTool.props.shapetype;
 			if ( cls )
 			{
-				var s:MovieClip = new cls();
+				s = new cls();
 				s.stop();
-				var ct:ColorTransform = new ColorTransform();
-				ct.color = color;
+				ct = new ColorTransform();
+				ct.color = selectedTool.props.color;
 				s.transform.colorTransform = ct;
 				if ( type == ShapeTool.TYPE_EMPTY ) s.gotoAndStop(2);
-				var st:ShapeTool = new ShapeTool( s );
+				st = new ShapeTool( s );
 				AddMeasureTool( st );
 			}
 		}
@@ -128,12 +157,16 @@ package com.ouorange.toolbar.measuretool
 		//增加一個測量工具到場景
 		public function AddMeasureTool( tool:CommonMeasureTool )
 		{
-			//trace( "AddMeasureTool" );
 			tool.addEventListener(CommonMeasureTool.TOOL_SELECTED,OnToolSelected);
 			measureTools.push( tool );
-			measureToolLayer.addChild( tool );
-			tool.x = mouseX;
-			tool.y = mouseY;
+			if ( interactiveTarget != null ) 
+			{
+				interactiveTarget.addChild( tool );
+				var p:Point = new Point( mouseX , mouseY );
+				p = interactiveTarget.globalToLocal( p );
+				tool.x = p.x;
+				tool.y = p.y;
+			}
 		}
 		
 		//選定一個測量工具
@@ -146,7 +179,8 @@ package com.ouorange.toolbar.measuretool
 		//提升工具到最上層
 		private function RaiseSelectedToolToTop( selectedTool:CommonMeasureTool ):void
 		{
-			measureToolLayer.addChild( selectedTool );
+			selectedTool.parent.addChild( selectedTool );
+			//measureToolLayer.addChild( selectedTool );
 		}
 		
 		//取消其它選取的工具
@@ -182,6 +216,15 @@ package com.ouorange.toolbar.measuretool
 			while ( measureToolLayer.numChildren )
 			{
 				measureToolLayer.removeChildAt(0);
+			}
+		}
+		
+		//設定目前選用的工具
+		public function SetSelectTool(selectedTool:SelectedTool):void 
+		{
+			this.selectedTool = selectedTool;
+			if ( this.selectedTool ) {
+				trace( "設定工具:", selectedTool.type , selectedTool.name );
 			}
 		}
 		

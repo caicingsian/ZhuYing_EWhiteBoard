@@ -6,6 +6,7 @@ package com.ouorange.toolbar.toolbutton
 	/**
 	 * ...
 	 * @author Joe&Allen
+	 * 垃圾桶按鈕
 	 */
 	public class TrashCanToolButton extends ToolButton 
 	{
