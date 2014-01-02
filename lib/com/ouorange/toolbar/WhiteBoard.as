@@ -49,7 +49,7 @@
 			
 			_materialContainer = new Sprite();
 			_sensor = new TouchSensor( _asset.width, _asset.height, _materialContainer);			
-			_canvas = new Canvas( _asset.width , _asset.height );
+			_canvas = new Canvas(_asset.width, _asset.height, 10 );
 			
 			TouchSensorManager.Instance.AppendSensor( _sensor );
 			

@@ -15,6 +15,10 @@ package com.ouorange.toolbar
 		
 		protected var _asset:MovieClip;
 		
+		protected var _sn:Number;
+		
+		protected var _chart_type:String;
+		
 		public function ChartComponent() 
 		{
 			super();
@@ -28,6 +32,26 @@ package com.ouorange.toolbar
 		public function OpenChart():void
 		{
 			
+		}
+		
+		public function RemoveChart():void
+		{
+			ChartManager.Instance.RemoveChart( this );
+		}
+		
+		public function get sn():Number 
+		{
+			return _sn;
+		}
+		
+		public function set sn(value:Number):void 
+		{
+			_sn = value;
+		}
+		
+		public function get chart_type():String 
+		{
+			return _chart_type;
 		}
 	}
 }

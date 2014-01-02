@@ -9,11 +9,26 @@ package com.ouorange.toolbar.toolbutton
 	 */
 	public class ZoomOutToolButton extends ToolButton 
 	{
+		private var _activeMC:MovieClip;
+		
 		public function ZoomOutToolButton(asset:MovieClip) 
 		{
-			this.name = ToolBarButtonControl.TOOL_ZOOM_OUT
 			super(asset);
-			
-		}	
+			this.name = ToolBarButtonControl.TOOL_ZOOM_OUT
+			_activeMC = asset["__ActiveMC"];
+			DisActiveTool();
+		}
+		
+		override public function ActiveTool():void 
+		{
+			super.ActiveTool();
+			_activeMC.visible = true;
+		}
+		
+		override public function DisActiveTool():void 
+		{
+			super.DisActiveTool();
+			_activeMC.visible = false;
+		}
 	}
 }

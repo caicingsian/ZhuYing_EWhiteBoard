@@ -5,6 +5,7 @@ package com.ouorange.toolbar
 	import com.nocircleno.graffiti.GraffitiCanvas;
 	import com.nocircleno.graffiti.tools.BrushTool;
 	import com.nocircleno.graffiti.tools.BrushType;
+	import com.utils.MathUtil;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
@@ -21,6 +22,14 @@ package com.ouorange.toolbar
 	 */
 	public class CanvasManager extends Sprite 
 	{
+		private static var _instance:CanvasManager;
+		
+		public static function get Instance():CanvasManager
+		{
+			_instance = _instance || new CanvasManager();
+			return _instance;
+		}
+		
 		private var _penCtrl:PenControl;
 		//目前所使用的筆.
 		private var _curtPen:Pen;
@@ -35,17 +44,23 @@ package com.ouorange.toolbar
 		
 		private var _activeCanvas:Canvas;
 		
+		private var _drawHistory:Vector.<Canvas>;
+		
+		private var _historyPoint:int = 0;
+		
 		public function CanvasManager( _stage:Stage ) 
 		{
-			super();
+			_instance = this;
 			this._stage = _stage;
 			allCanvas = new Vector.<Canvas>();
 			
 			//預設的畫布
-			defCanvas = new Canvas(1500, 800);
+			defCanvas = new Canvas(1500, 800, 10);
 			defCanvas.name = "default";
 			addChild( defCanvas );
 			AppendCanvas( defCanvas );
+			
+			_drawHistory = new Vector.<Canvas>();
 			
 			_activeCanvas = defCanvas;			
 			//_stage.addEventListener(MouseEvent.MOUSE_DOWN , OnStageMouseDown );
@@ -63,7 +78,36 @@ package com.ouorange.toolbar
 			if ( _enable )
 			{
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE , OnStageMouseMove );
+				if ( _activeCanvas )
+				{
+					_drawHistory.push( _activeCanvas );
+					_historyPoint = _drawHistory.length - 1;
+					//trace("add:",_historyPoint);	
+				}
 			}
+		}
+		
+		public function PrevHistory():void
+		{
+			if ( _historyPoint < 0 || _drawHistory.length == 0) return;
+			VaildHistoryPoint();
+			_drawHistory[_historyPoint].canvas.prevHistory();
+			_historyPoint--;
+			
+		}
+		
+		public function NextHistory():void
+		{
+			if ( _historyPoint >= _drawHistory.length || _drawHistory.length == 0) return;
+			VaildHistoryPoint();
+			_drawHistory[_historyPoint].canvas.nextHistory();
+			_historyPoint++;
+			
+		}
+		
+		private function VaildHistoryPoint():void
+		{
+			_historyPoint = MathUtil.Clamp( _historyPoint , 0 , _drawHistory.length - 1 );
 		}
 		
 		private function OnStageMouseMove(e:MouseEvent):void 
@@ -98,6 +142,7 @@ package com.ouorange.toolbar
 		public function ClearALL():void 
 		{
 			var len:int = allCanvas.length;
+			_drawHistory = new Vector.<Canvas>();
 			for (var i:int = 0; i < len; i++) 
 			{
 				allCanvas[i].canvas.clearCanvas();

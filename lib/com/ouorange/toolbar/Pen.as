@@ -65,8 +65,9 @@
 		public function setDrawPoint(p:Point):void
 		{
 			_drawPoint = p;
-			_drawPointTexture.x = _drawPoint.x;
-			_drawPointTexture.y = _drawPoint.y;
+			p = globalToLocal(p);
+			_drawPointTexture.x = p.x;
+			_drawPointTexture.y = p.y;
 		}
 		
 		//產生筆頭圖像

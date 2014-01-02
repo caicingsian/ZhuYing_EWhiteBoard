@@ -19,9 +19,12 @@ package com.ouorange.toolbar
 		
 		private var _owner:Sprite;
 		
-		public function TouchSensor( swidth:int = 100, sheight:int = 100 , owner:Sprite = null ) 
+		private var _isDebug:Boolean;
+		
+		public function TouchSensor( swidth:int = 100, sheight:int = 100 , owner:Sprite = null , isDebug:Boolean = false) 
 		{
 			super();
+			_isDebug = isDebug;
 			_owner = owner;
 			CreateSensor( swidth , sheight );
 		}
@@ -30,12 +33,13 @@ package com.ouorange.toolbar
 		{
 			RemoveSensor();
 			_sensor = new Sprite();
-			_sensor.graphics.beginFill( 0x00FF00 , 0 );
+			_sensor.graphics.beginFill( 0x00FF00 , ( _isDebug ? 0.5 : 0 ) );
 			_sensor.graphics.drawRect( 0 , 0 , swidth , sheight );
 			_sensor.graphics.endFill();
 			
 			_sensor.addEventListener( MouseEvent.MOUSE_DOWN , OnTouchHandler );
 			_sensor.addEventListener( MouseEvent.MOUSE_UP , OnTouchHandler );
+			_sensor.addEventListener( MouseEvent.MOUSE_MOVE , OnTouchHandler );
 			_sensor.addEventListener( MouseEvent.CLICK , OnTouchHandler );
 			
 			addChild( _sensor );
@@ -47,6 +51,7 @@ package com.ouorange.toolbar
 			{
 				_sensor.removeEventListener( MouseEvent.MOUSE_DOWN , OnTouchHandler );
 				_sensor.removeEventListener( MouseEvent.MOUSE_UP , OnTouchHandler );
+				_sensor.removeEventListener( MouseEvent.MOUSE_MOVE , OnTouchHandler );
 				_sensor.removeEventListener( MouseEvent.CLICK , OnTouchHandler );
 				removeChild( _sensor );
 			}
@@ -61,7 +66,9 @@ package com.ouorange.toolbar
 			} else if ( type == MouseEvent.MOUSE_UP ) {
 				type = TouchSensorEvent.TOUCH_END;
 			} else if ( type == MouseEvent.CLICK ) {
-				type = TouchSensorEvent.TOUCH_TAP
+				type = TouchSensorEvent.TOUCH_TAP;
+			} else if ( type == MouseEvent.MOUSE_MOVE ) {
+				type = TouchSensorEvent.TOUCH_MOVE;
 			}
 			
 			this.dispatchEvent( new TouchSensorEvent( type , this ) );

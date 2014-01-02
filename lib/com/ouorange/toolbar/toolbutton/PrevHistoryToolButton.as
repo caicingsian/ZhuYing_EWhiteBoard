@@ -1,5 +1,6 @@
 package com.ouorange.toolbar.toolbutton 
 {
+	import com.ouorange.toolbar.CanvasManager;
 	import com.ouorange.toolbar.ToolBarButtonControl;
 	import flash.display.MovieClip;
 	
@@ -15,6 +16,10 @@ package com.ouorange.toolbar.toolbutton
 			this.name = ToolBarButtonControl.TOOL_PREV_HISTORY;
 			super(asset);		
 		}
+		
+		override public function ActiveTool():void 
+		{
+			CanvasManager.Instance.PrevHistory();
+		}
 	}
-
 }

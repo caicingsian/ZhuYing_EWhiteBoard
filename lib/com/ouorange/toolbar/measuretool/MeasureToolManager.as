@@ -212,11 +212,14 @@ package com.ouorange.toolbar.measuretool
 		//清除全部
 		public function ClearALL():void 
 		{
-			measureTools = new Vector.<CommonMeasureTool>();
-			while ( measureToolLayer.numChildren )
+			var len:int = measureTools.length;
+			var tmpTool:CommonMeasureTool;
+			for (var i:int = 0; i < len; i++) 
 			{
-				measureToolLayer.removeChildAt(0);
+				tmpTool = measureTools[i];
+				tmpTool.parent.removeChild( tmpTool );
 			}
+			measureTools = new Vector.<CommonMeasureTool>();
 		}
 		
 		//設定目前選用的工具

@@ -13,6 +13,7 @@ package com.ouorange.toolbar.events
 		public static const TOUCH_BEGIN:String = "TOUCH_BEGIN";
 		public static const TOUCH_END:String = "TOUCH_END";
 		public static const TOUCH_TAP:String = "TOUCH_TAP";
+		static public const TOUCH_MOVE:String = "TOUCH_MOVE";
 		
 		private var _sensor:TouchSensor;
 		

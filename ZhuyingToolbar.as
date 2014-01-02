@@ -17,6 +17,7 @@
 	import com.ouorange.toolbar.WhiteBoard;
 	import com.ouorange.toolbar.WhiteBoardDirection;
 	import com.ouorange.toolbar.WhiteBoardManaer;
+	import com.ouorange.toolbar.ZoomInOutControl;
 	import fl.transitions.easing.*;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
@@ -38,7 +39,7 @@
 		private var canvasManager:CanvasManager;
 		
 		//畫筆屬性控制
-		private var brushInspector:BrushInspector;
+		//private var brushInspector:BrushInspector;
 		
 		//圖表管理
 		private var chartManager:ChartManager;
@@ -48,6 +49,10 @@
 		
 		//工具列中間互動感應區塊
 		private var touchSensor:TouchSensor;
+		
+		private var zoomInOutControl:ZoomInOutControl;
+		
+		private var scaleableLayer:Sprite;
 		
 		public function ZhuyingToolbar()
 		{
@@ -59,16 +64,12 @@
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE, OnAddToStage);
 			GlobalConst.APP_STAGE = this.stage;
-			
-			
-			
-			
 			Init();
 		}
 		
 		private function Init():void
 		{
-			Cc.startOnStage(this, "");			
+			Cc.startOnStage(this, "");	
 			
 			touchSensor = new TouchSensor( 1500 , 750 );
 			TouchSensorManager.Instance.AppendSensor( touchSensor );
@@ -95,22 +96,38 @@
 			canvasManager.AppendCanvas( whitebaordManager.GetWhiteBoard(WhiteBoardDirection.LEFT).canvas );
 			canvasManager.AppendCanvas( whitebaordManager.GetWhiteBoard(WhiteBoardDirection.RIGHT).canvas );
 			
-			brushInspector = new BrushInspector(this["__BrushInspector"]);
+			//brushInspector = new BrushInspector(this["__BrushInspector"]);
 		
 			toolBarControl = new ToolBarButtonControl( this );
 			toolBarControl.addEventListener( ToolButton.TOOL_ACTIVED , OnToolEventHandler , false , 0 , true);
 			toolBarControl.addEventListener( ToolButton.TOOL_DISACTIVE , OnToolEventHandler , false , 0 , true);
 			
-			addChild( touchSensor );
-			addChild( measureManager );
-			addChild( chartManager );//圖表應該也是點了哪裏就加在哪裏
-			addChild( canvasManager );
+			scaleableLayer = new Sprite();
+			scaleableLayer.addChild( this["__RockLee"] );
+			
+			zoomInOutControl = new ZoomInOutControl( scaleableLayer );
+			zoomInOutControl.SetCursor( ZoomInOutControl.MODE_ZOOM_OUT, this["sc_mc_s"] );
+			zoomInOutControl.SetCursor( ZoomInOutControl.MODE_ZOOM_IN, this["sc_mc"] );
+			zoomInOutControl.SetCursor( ZoomInOutControl.MODE_DRAG, this["hand"] );
+			
+			
+			
+			addChild( scaleableLayer );
+			scaleableLayer.addChild( touchSensor );
+			scaleableLayer.addChild( measureManager );
+			scaleableLayer.addChild( canvasManager );
+			scaleableLayer.addChild( chartManager );
+			//scaleableLayer.addChild( whitebaordManager );//白板在縮放模式下要怎麼呈現?
+			//scaleableLayer.addChild( brushInspector );
+			//scaleableLayer.addChild( penControl );
+			
 			
 			addChild( whitebaordManager );
 			
-			addChild( brushInspector );
 			addChild( penControl );
+			addChild( zoomInOutControl );
 			addChild( toolBarControl );
+				
 		}
 
 		private function OnTrashCanClick(e:MouseEvent):void
@@ -119,6 +136,7 @@
 			//彈跳確認視窗.
 			measureManager.ClearALL();
 			canvasManager.ClearALL();
+			penControl.measureTools = measureManager.MeasureTools;
 		}
 		
 		//開啟筆刷工具( 鉛筆、淫光筆、擦子 )
@@ -130,9 +148,9 @@
 			{
 				penControl.setCurrentPen(pen);
 				//更新畫面屬性面板
-				brushInspector.UpdateBrush( pen );
+				//brushInspector.UpdateBrush( pen );
 				//彈跳畫筆面板
-				brushInspector.ShowInspector();
+				//brushInspector.ShowInspector();
 				//開啟畫筆控制
 				penControl.enable = true;
 				//開啟畫板
@@ -166,14 +184,34 @@
 					CloseBrushTool();
 				}
 				if ( toolName == ToolBarButtonControl.TOOL_TRASHCAN )
-				{
+				{   //按下垃圾桶
 					OnTrashCanClick(null);
-				}
+				}				
 			}
 			else if ( e.type == ToolButton.TOOL_DISACTIVE )
 			{	//工具關閉
 				CloseBrushByToolName(toolName);
 			}
+			
+			HandleZoomToolEvent( toolName , e.type );
+		}
+		
+		//處理縮放工具事件
+		private function HandleZoomToolEvent(toolName:String, type:String):void 
+		{
+			if ( toolName == ToolBarButtonControl.TOOL_ZOOM_IN ||
+				 toolName == ToolBarButtonControl.TOOL_ZOOM_OUT ||
+				 toolName == ToolBarButtonControl.TOOL_DRAG )
+			{
+				if ( type == ToolButton.TOOL_DISACTIVE ) {
+					zoomInOutControl.SetEnable(false);
+				} else {
+					zoomInOutControl.SetEnable(true);
+					if ( toolName == ToolBarButtonControl.TOOL_ZOOM_IN ) zoomInOutControl.SetMode( ZoomInOutControl.MODE_ZOOM_IN );
+					else if ( toolName == ToolBarButtonControl.TOOL_ZOOM_OUT ) zoomInOutControl.SetMode( ZoomInOutControl.MODE_ZOOM_OUT );
+					else if ( toolName == ToolBarButtonControl.TOOL_DRAG ) zoomInOutControl.SetMode( ZoomInOutControl.MODE_DRAG);
+				}
+			}				
 		}
 		
 		private function CloseBrushByToolName(toolName:String):void 

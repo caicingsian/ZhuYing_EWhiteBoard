@@ -37,7 +37,7 @@ package com.ouorange.toolbar
 				_active = true;
 			}
 		}
-		
+		//處理繪圖指令
 		public function DrawByEvent( e:MouseEvent ):void
 		{
 			canvas.draw( e );
