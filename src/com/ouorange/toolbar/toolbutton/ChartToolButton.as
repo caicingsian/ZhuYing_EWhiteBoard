@@ -19,6 +19,7 @@ package com.ouorange.toolbar.toolbutton
 			this.name = ToolBarButtonControl.TOOL_XYCOMPOMENT;
 			_chartManager = ChartManager.Instance;
 			isSingleClick = true;
+			_size = 0;
 		}
 		
 		override public function ActiveTool():void 

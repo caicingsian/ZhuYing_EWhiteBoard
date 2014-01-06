@@ -37,6 +37,9 @@ package com.ouorange.toolbar.toolbutton
 			_toolNameMapping["ruler_btn3"] = MeasureTool.MEASURE_RULER;
 			_toolNameMapping["ruler_btn4"] = MeasureTool.MEASURE_PROTRACTOR;
 			
+			
+			_size = 30;
+			
 			InitToolButtonEvent();
 		}	
 		

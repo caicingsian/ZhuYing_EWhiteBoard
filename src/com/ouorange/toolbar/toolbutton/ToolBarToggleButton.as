@@ -13,7 +13,7 @@ package com.ouorange.toolbar.toolbutton
 		{
 			this.name = ToolBarButtonControl.TOOL_TOGGLE;
 			super(asset);
-			
+			isSingleClick = true;
 		}	
 	}
 }

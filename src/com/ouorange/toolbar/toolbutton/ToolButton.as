@@ -5,6 +5,7 @@ package com.ouorange.toolbar.toolbutton
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.DropShadowFilter;
+	import flash.geom.Point;
 	
 	/**
 	 * ...
@@ -15,6 +16,8 @@ package com.ouorange.toolbar.toolbutton
 		public static const TOOL_ACTIVED:String = "TOOL_ACTIVED";
 		public static const TOOL_DISACTIVE:String = "TOOL_DISACTIVE";
 		
+		public var originPostion:Point;
+		
 		protected var _asset:MovieClip;
 		
 		protected var _panel:MovieClip;
@@ -23,7 +26,10 @@ package com.ouorange.toolbar.toolbutton
 		
 		protected var _isActive:Boolean;
 		
-		private var activeFilter:DropShadowFilter = new DropShadowFilter(3, 45, 0, .8, 3, 3, 100, 1, true);
+		//按鈕大小
+		protected var _size:Number = 50;
+		
+		//private var activeFilter:DropShadowFilter = new DropShadowFilter(3, 45, 0, .8, 3, 3, 100, 1, true);
 		
 		//按鈕為單一點擊工具;
 		public var isSingleClick:Boolean = false;
@@ -47,6 +53,7 @@ package com.ouorange.toolbar.toolbutton
 				_toggleBtn.addEventListener( MouseEvent.CLICK , OnMouseHandler );
 				_toggleBtn.buttonMode = true;
 			}
+			_asset.x = _asset.y = 0;
 			addChild(_asset);
 			super();		
 		}
@@ -117,6 +124,16 @@ package com.ouorange.toolbar.toolbutton
 				if ( _isActive ) this.dispatchEvent( new Event( TOOL_ACTIVED , true , true) );
 				else this.dispatchEvent( new Event( TOOL_DISACTIVE , true , true ) );
 			}
+		}
+		
+		public function get size():Number 
+		{
+			return _size;
+		}
+		
+		public function set size(value:Number):void 
+		{
+			_size = value;
 		}
 	}
 }

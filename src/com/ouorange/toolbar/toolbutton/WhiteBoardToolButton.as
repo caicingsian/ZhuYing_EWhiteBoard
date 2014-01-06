@@ -33,6 +33,8 @@ package com.ouorange.toolbar.toolbutton
 			whiteboardMaping["broad_btn_c"] = WhiteBoardDirection.CENTER;
 			whiteboardMaping["broad_btn_r"] = WhiteBoardDirection.RIGHT;
 			whiteboardMaping["broad_btn_b"] = WhiteBoardDirection.BOTTOM;
+			
+			_size = 30;
 		}
 		
 		private function InitToolButtonEvent():void 

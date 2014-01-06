@@ -17,6 +17,7 @@ package com.ouorange.toolbar.toolbutton
 			this.name = ToolBarButtonControl.TOOL_ZOOM_OUT
 			_activeMC = asset["__ActiveMC"];
 			DisActiveTool();
+			_size = 0;
 		}
 		
 		override public function ActiveTool():void 

@@ -14,7 +14,8 @@ package com.ouorange.toolbar.toolbutton
 		{
 			this.name = ToolBarButtonControl.TOOL_TRASHCAN
 			isSingleClick = true;
-			super(asset);		
+			super(asset);
+			_size = 0;
 		}
 	}
 

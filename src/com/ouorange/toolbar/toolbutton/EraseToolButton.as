@@ -27,6 +27,7 @@ package com.ouorange.toolbar.toolbutton
 			_burshSize = new ToolBrushSize(_asset["panel"]["panel"]["__BrushSize"]);
 			_burshSize.addEventListener( ToolBrushSize.SIZE_UPDATE , OnSizeChange );
 			UpdateBrushProp();
+			_size = 30;
 		}
 		
 		private function OnSizeChange(e:Event):void
