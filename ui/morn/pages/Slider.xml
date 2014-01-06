@@ -1,0 +1,4 @@
+<Dialog sceneWidth="100" sceneHeight="100" sceneColor="0xffffff" sceneBg="" layers="2,1,0,0,第 2 层;1,1,0,0,第 1 层" var="slider">
+  <Image url="png.comps.slider.Track1" x="10" y="11" layer="1"/>
+  <Image url="png.comps.slider.thumb1" x="12" y="6" layer="2"/>
+</Dialog>
