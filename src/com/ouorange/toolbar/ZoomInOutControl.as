@@ -385,10 +385,18 @@ package com.ouorange.toolbar
 			} );
 			*/
 			
-			_target.width=sw
-			_target.height=sh
-			_target.x=_target.y=0
+			//_target.width=sw
+			//_target.height=sh
+			//_target.x=_target.y=0
 			scale2=1
+			
+			
+		   moveTween = new Tween( _target,"scaleX",Strong.easeIn, _target.scaleX,  1  ,0.5,true);
+		   moveTween = new Tween( _target,"scaleY",Strong.easeIn, _target.scaleY,  1 ,0.5,true);
+
+		   moveTween = new Tween( _target,"x",Strong.easeIn, _target.x, 0 ,0.5,true);
+		   moveTween = new Tween( _target,"y",Strong.easeIn, _target.y, 0 ,0.5,true)
+			
 			
 		}
 		
@@ -525,7 +533,7 @@ package com.ouorange.toolbar
 			
 			
 			square.addEventListener( MouseEvent.MOUSE_UP , OnMouseUp ); // Allen
-			
+			square.addEventListener( MouseEvent.MOUSE_MOVE , OnMouseMove );
 			
 		}
 		
@@ -536,6 +544,7 @@ package com.ouorange.toolbar
 			_sensor.removeEventListener( MouseEvent.MOUSE_MOVE , OnMouseMove );
 			
 			square.removeEventListener( MouseEvent.MOUSE_UP , OnMouseUp ); // Allen
+			square.removeEventListener( MouseEvent.MOUSE_MOVE , OnMouseMove );
 		}
 	}
 }
